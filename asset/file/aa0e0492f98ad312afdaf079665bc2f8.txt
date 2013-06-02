@@ -1,0 +1,20 @@
+appSIMAkademikSekolah32
+insert into akunsiswa(nis,pass) select nis,md5(nis) from datasiswa
+
+insert into akunguru(userguru,passguru) select NIP,md5(concat(NIP,'appSIMAkademikSekolah32')) from pegawai where Bagian='akademik' and stat=1
+
+update akunsiswa set pass=md5(concat(nis,'appSIMAkademikSekolah32')) where nis=nis
+
+merubah password phpmyadmin
+pake xampp
+tambahkan privilage utk root melalui menu setting phpmyadmin, isi password utk root
+phpmyadmin akan error, buka file xampp > phpmyadmin > config.inc.php
+isi kan password nya yg semula kosong
+reboot mysql
+pada config auth type, uba cookies jd http
+refresh phpmyadmin
+
+
+insert into tbl_akun_siswa(username,password) select nis,md5(concat(nis,email)) from tbl_data_siswa
+
+update tbl_akun_siswa a set password=(SELECT MD5( CONCAT( nis, email ) ) as hasil FROM tbl_data_siswa where nis=a.username)
