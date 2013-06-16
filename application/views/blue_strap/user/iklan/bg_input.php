@@ -44,6 +44,13 @@
 							  </div>
 							  
 							  <div class="control-group">
+								<label class="control-label" for="rentang_harga">Rentang Harga</label>
+								<div class="controls">
+								  <input type="text" id="rentang_harga" name="rentang_harga" placeholder="Rentang Harga" required value="<?php echo $rentang_harga; ?>">
+								</div>
+							  </div>
+							  
+							  <div class="control-group">
 								<label class="control-label" for="kondisi">Kondisi</label>
 								<div class="controls">
 								<?php $a=''; $b='';

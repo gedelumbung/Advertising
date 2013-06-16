@@ -451,7 +451,9 @@ class app_global_superadmin_model extends CI_Model {
 			$filter['st'] = $fill;
 		}
 		
-		$tot_hal = $this->db->get_where("dlmbg_iklan",$filter);
+		$tot_hal = $this->db->query("SELECT a.id_iklan, a.st, a.judul_iklan, a.id_member, c.kategori, b.lokasi, a.harga, a.tanggal, a.tanggal_expired, a.kondisi, a .tipe, (select x.gambar from 
+		dlmbg_gambar_iklan x where x.id_iklan=a.id_iklan order by RAND() LIMIT 1) as gambar_thumb FROM dlmbg_iklan a left join dlmbg_lokasi b on 
+		a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on a.id_kategori=c.id_kategori ".$set_fill."");
 		$config['base_url'] = base_url() . 'superadmin/iklan/index/';
 		$config['total_rows'] = $tot_hal->num_rows();
 		$config['per_page'] = $limit;
@@ -461,13 +463,16 @@ class app_global_superadmin_model extends CI_Model {
 		$config['next_link'] = 'Next';
 		$config['prev_link'] = 'Prev';
 		$this->pagination->initialize($config);
+		echo $tot_hal->num_rows();
 		
-		$w = $this->db->query("SELECT a.id_iklan, a.st, a.judul_iklan, a.id_member, c.kategori, b.lokasi, a.harga, a.tanggal, a.kondisi, a .tipe, (select x.gambar from 
+		$w = $this->db->query("SELECT a.id_iklan, a.st, a.judul_iklan, a.id_member, c.kategori, b.lokasi, a.harga, a.tanggal, a.tanggal_expired, a.kondisi, a .tipe, (select x.gambar from 
 		dlmbg_gambar_iklan x where x.id_iklan=a.id_iklan order by RAND() LIMIT 1) as gambar_thumb FROM dlmbg_iklan a left join dlmbg_lokasi b on 
 		a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on a.id_kategori=c.id_kategori ".$set_fill." order by id_iklan DESC LIMIT ".$offset.",".$limit."");
 		$i = 0;
 		foreach($w->result() as $h)
 		{	
+			$waktu_expired = gmdate("Y-m-d",$h->tanggal_expired);
+			
 			$gbr = "no-image.jpg";
 			if($h->gambar_thumb!="")
 			{
@@ -493,6 +498,14 @@ class app_global_superadmin_model extends CI_Model {
 								<a href="'.base_url().'superadmin/pesan/detail/'.$h->id_member.'" class="btn btn-small">Kirim Pesan</a>
 								<a href="'.base_url().'superadmin/iklan/hapus/'.$h->id_iklan.'" class="btn btn-small" onClick=\'return confirm("Are you sure?");\'>Hapus</a>
 								<a href="'.base_url().'superadmin/iklan/approve/'.$h->id_iklan.'/'.$upd_approve.'" class="btn btn-warning btn-small">'.$approve.'</a>
+							</p>
+							<p>
+							<form method="post" action="'.base_url().'superadmin/iklan/set_expired">
+								<input type="date" placeholder="Set waktu expired" value="'.$waktu_expired.'" name="tanggal_expired">
+								<input type="hidden" value="'.$h->id_iklan.'" name="id_iklan">
+								<br>
+								<input type="submit" class="btn btn-small" value="Simpan">
+							</form>
 							</p>
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'" target="_blank"><img class="img" src="'.base_url().'asset/images/iklan/thumb/'.$gbr.'" alt="'.$h->judul_iklan.'" title="'.$h->judul_iklan.'"></a>
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'" class="title">'.$h->judul_iklan.'</a>

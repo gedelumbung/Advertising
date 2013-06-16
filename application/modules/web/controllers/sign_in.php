@@ -57,7 +57,17 @@ class sign_in extends CI_Controller {
 		}
 		else
 		{
-			$this->app_user_login_model->cekUserLogin($where);
+			$pass1 = $this->input->post("password");
+			$pass2 = $this->input->post("password2");
+			if($pass1==$pass2)
+			{
+				$this->app_user_login_model->cekUserLogin($where);
+			}
+			else
+			{
+				$this->session->set_flashdata('result', 'Password tidak sama...');
+				redirect("web/sign_in");
+			}
 		}
 	}
 

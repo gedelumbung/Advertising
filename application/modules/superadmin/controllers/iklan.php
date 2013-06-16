@@ -57,6 +57,17 @@ class iklan extends MX_Controller {
 		}
 	}
 
+	function set_expired()
+	{
+		if($this->session->userdata('logged_in_admin')!="")
+		{
+			$where['id_iklan'] = $this->input->post("id_iklan");
+			$updt['tanggal_expired'] = strtotime($this->input->post("tanggal_expired"))+3600*7;
+			$this->db->update("dlmbg_iklan",$updt,$where);
+			redirect("superadmin/iklan");
+		}
+	}
+
 	function filter()
 	{
 		if($this->session->userdata('logged_in_admin')!="")

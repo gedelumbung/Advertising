@@ -111,7 +111,7 @@ if ( ! function_exists('create_captcha'))
 			$pool = '12345678ABCDEFHIJKLMNPQRSTUVWXYZ';
 
 			$str = '';
-			for ($i = 0; $i < 5; $i++)
+			for ($i = 0; $i < 8; $i++)
 			{
 				$str .= substr($pool, mt_rand(0, strlen($pool) -1), 1);
 			}

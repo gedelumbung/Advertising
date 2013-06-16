@@ -43,6 +43,11 @@ class iklan extends CI_Controller {
 	{
 		if($this->session->userdata('logged_in')!="")
 		{
+			$waktu_sekarang = gmdate("Y/m/d",time()-3600*8);
+			$cek = $this->db->query("SELECT * FROM dlmbg_iklan 
+			where DATE_FORMAT(FROM_UNIXTIME(tanggal-3600*8), '%Y/%m/%d')='".$waktu_sekarang."'")->num_rows();
+			
+			
 			$d['left_top_menu'] = $this->app_global_web_model->generate_menu("kiri","nav pull-left");
 			$d['right_top_menu'] = $this->app_global_web_model->generate_menu("kanan","nav pull-right");
 			$d['center_bottom_menu'] = $this->app_global_web_model->generate_menu("footer");
@@ -64,6 +69,7 @@ class iklan extends CI_Controller {
 			$d['judul_iklan'] = "";
 			$d['keterangan'] = "";
 			$d['harga'] = "";
+			$d['rentang_harga'] = "";
 			$d['kondisi'] = "";
 			$d['tipe'] = "";
 			
@@ -73,7 +79,14 @@ class iklan extends CI_Controller {
 			$this->breadcrumb->append_crumb('TAMBAH IKLAN', '/');
 			
 			$this->load->view($_SESSION['site_theme'].'/bg_header',$d);
-			$this->load->view($_SESSION['site_theme'].'/user/iklan/bg_input');
+			if($cek>=$_SESSION['site_max_post'])
+			{
+				$this->load->view($_SESSION['site_theme'].'/user/iklan/bg_input_gagal');
+			}
+			else
+			{
+				$this->load->view($_SESSION['site_theme'].'/user/iklan/bg_input');
+			}
 			$this->load->view($_SESSION['site_theme'].'/bg_left');
 			$this->load->view($_SESSION['site_theme'].'/bg_footer');
 		}
@@ -108,6 +121,7 @@ class iklan extends CI_Controller {
 			$d['judul_iklan'] = $q->judul_iklan;
 			$d['keterangan'] = $q->keterangan;
 			$d['harga'] = $q->harga;
+			$d['rentang_harga'] = $q->rentang_harga;
 			$d['kondisi'] = $q->kondisi;
 			$d['tipe'] = $q->tipe;
 			
@@ -150,6 +164,7 @@ class iklan extends CI_Controller {
 				$in['judul_iklan'] = $this->input->post("judul");
 				$in['keterangan'] = $this->input->post("keterangan");
 				$in['harga'] = $this->input->post("harga");
+				$in['rentang_harga'] = $this->input->post("rentang_harga");
 				$in['tanggal'] = time()+3600*7;
 				$in['kondisi'] = $this->input->post("kondisi");
 				$in['tipe'] = $this->input->post("tipe");
@@ -167,6 +182,7 @@ class iklan extends CI_Controller {
 				$in['judul_iklan'] = $this->input->post("judul");
 				$in['keterangan'] = $this->input->post("keterangan");
 				$in['harga'] = $this->input->post("harga");
+				$in['rentang_harga'] = $this->input->post("rentang_harga");
 				$in['tanggal'] = time()+3600*7;
 				$in['kondisi'] = $this->input->post("kondisi");
 				$in['tipe'] = $this->input->post("tipe");

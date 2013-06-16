@@ -256,7 +256,7 @@ class app_global_web_model extends CI_Model {
 	public function generate_front_iklan($limit,$order)
 	{
 		$hasil = "";
-		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.tanggal, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x where x.id_iklan=a.id_iklan order by RAND() LIMIT 1) as gambar_thumb FROM dlmbg_iklan a left join dlmbg_lokasi b on a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on a.id_kategori=c.id_kategori where st='1' order by ".$order." DESC LIMIT ".$limit."");
+		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.rentang_harga, a.tanggal_expired, a.tanggal, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x where x.id_iklan=a.id_iklan order by RAND() LIMIT 1) as gambar_thumb FROM dlmbg_iklan a left join dlmbg_lokasi b on a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on a.id_kategori=c.id_kategori where st='1' order by ".$order." DESC LIMIT ".$limit."");
 		foreach($w->result() as $h)
 		{	
 			$gbr = "no-image.jpg";
@@ -269,6 +269,7 @@ class app_global_web_model extends CI_Model {
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'"><img class="img" src="'.base_url().'asset/images/iklan/thumb/'.$gbr.'" alt="'.$h->judul_iklan.'" title="'.$h->judul_iklan.'"></a>
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'" class="title">'.$h->judul_iklan.'</a>
 							<p>Rp. '.number_format($h->harga,2,',','.').'</p>
+							<p>Rentang Harga : '.$h->rentang_harga.'</p>
 							Lokasi : <strong>'.$h->lokasi.'</strong><br>Kategori : <strong>'.$h->kategori.'</strong>
 							<p><span class="label label-warning">Jenis : '.$h->kondisi.'</span> <span class="label label-important">'.$h->tipe.'</span></p>
 						</div>
@@ -301,7 +302,7 @@ class app_global_web_model extends CI_Model {
 		$config['prev_link'] = 'Prev';
 		$this->pagination->initialize($config);
 		
-		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.tanggal, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x 
+		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.tanggal, a.tanggal_expired, a.rentang_harga, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x 
 		where x.id_iklan=a.id_iklan order by RAND() LIMIT 1) as gambar_thumb FROM dlmbg_iklan a left join dlmbg_lokasi b on a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on 
 		a.id_kategori=c.id_kategori where a.id_kategori='".$id_param."' and st='1' order by id_iklan DESC LIMIT ".$offset.",".$limit."");
 		foreach($w->result() as $h)
@@ -316,6 +317,7 @@ class app_global_web_model extends CI_Model {
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'"><img class="img" src="'.base_url().'asset/images/iklan/thumb/'.$gbr.'" alt="'.$h->judul_iklan.'" title="'.$h->judul_iklan.'"></a>
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'" class="title">'.$h->judul_iklan.'</a>
 							<p>Rp. '.number_format($h->harga,2,',','.').'</p>
+							<p>Rentang Harga : '.$h->rentang_harga.'</p>
 							Lokasi : <strong>'.$h->lokasi.'</strong><br>Kategori : <strong>'.$h->kategori.'</strong>
 							<p><span class="label label-warning">Jenis : '.$h->kondisi.'</span> <span class="label label-important">'.$h->tipe.'</span></p>
 						</div>
@@ -330,7 +332,7 @@ class app_global_web_model extends CI_Model {
 	{
 		$hasil = "";
 		
-		$w = $this->db->query("SELECT a.judul_iklan, a.keterangan, a.harga, a.tanggal, d.email, a.kondisi, a.tipe, b.lokasi, c.kategori, d.nama, d.alamat, d.no_hp, d.no_telpon, 
+		$w = $this->db->query("SELECT a.judul_iklan, a.keterangan, a.harga, a.tanggal, d.email, a.rentang_harga, a.tanggal_expired, a.kondisi, a.tipe, b.lokasi, c.kategori, d.nama, d.alamat, d.no_hp, d.no_telpon, 
 		d.jk, d.tgl_bergabung, d.gambar, d.id_member, a.id_iklan FROM `dlmbg_iklan` a left join dlmbg_lokasi b on a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on 
 		a.id_kategori=c.id_kategori left join dlmbg_member d on a.id_member=d.id_member where a.id_iklan='".$id_param."' and st='1'");
 		if($w->num_rows()>0)
@@ -350,6 +352,7 @@ class app_global_web_model extends CI_Model {
 								<div class="span1">Kondisi : </div><div class="span2"><strong>'.$h->kondisi.'</strong></div>
 								<div class="span1">Lokasi : </div><div class="span2"><strong>'.$h->lokasi.'</strong></div>
 								<div class="span1">Kategori </div><div class="span2"><strong>'.$h->kategori.'</strong></div>
+								<div class="span4">Rentang Harga : </div><div class="span2"><strong>'.$h->rentang_harga.'</strong></div>
 								<div class="cleaner_h5"></div>
 									'.$h->keterangan.'
 								</div>
@@ -531,7 +534,7 @@ class app_global_web_model extends CI_Model {
 			$order = "id_iklan";
 		}
 		
-		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.tanggal, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x 
+		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.tanggal, a.tanggal_expired, a.rentang_harga, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x 
 		where x.id_iklan=a.id_iklan order by RAND() LIMIT 1) as gambar_thumb FROM dlmbg_iklan a left join dlmbg_lokasi b on a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on 
 		a.id_kategori=c.id_kategori where st='1' order by ".$order." DESC LIMIT ".$offset.",".$limit."");
 		$i = 0;
@@ -553,6 +556,7 @@ class app_global_web_model extends CI_Model {
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'"><img class="img" src="'.base_url().'asset/images/iklan/thumb/'.$gbr.'" alt="'.$h->judul_iklan.'" title="'.$h->judul_iklan.'"></a>
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'" class="title">'.$h->judul_iklan.'</a>
 							<p>Rp. '.number_format($h->harga,2,',','.').'</p>
+							<p>Rentang Harga : '.$h->rentang_harga.'</p>
 							Lokasi : <strong>'.$h->lokasi.'</strong><br>Kategori : <strong>'.$h->kategori.'</strong>
 							<p><span class="label label-warning">Jenis : '.$h->kondisi.'</span> <span class="label label-important">'.$h->tipe.'</span></p>
 						</div>
@@ -984,7 +988,7 @@ class app_global_web_model extends CI_Model {
 		$config['prev_link'] = 'Prev';
 		$this->pagination->initialize($config);
 		
-		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.tanggal, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x 
+		$w = $this->db->query("SELECT a.id_iklan, a.judul_iklan, c.kategori, b.lokasi, a.harga, a.tanggal, a.rentang_harga, a.kondisi, a .tipe, (select x.gambar from dlmbg_gambar_iklan x 
 		where x.id_iklan=a.id_iklan order by RAND() LIMIT 1) as gambar_thumb FROM dlmbg_iklan a left join dlmbg_lokasi b on a.id_lokasi=b.id_lokasi left join dlmbg_kategori c on 
 		a.id_kategori=c.id_kategori where a.id_member='".$id_param."' order by id_iklan DESC LIMIT ".$offset.",".$limit."");
 		$i = 0;
@@ -1010,6 +1014,7 @@ class app_global_web_model extends CI_Model {
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'"><img class="img" src="'.base_url().'asset/images/iklan/thumb/'.$gbr.'" alt="'.$h->judul_iklan.'" title="'.$h->judul_iklan.'"></a>
 							<a href="'.base_url().'web/iklan/get/'.$h->id_iklan.'/'.url_title($h->judul_iklan,'-',TRUE).'" class="title">'.$h->judul_iklan.'</a>
 							<p>Rp. '.number_format($h->harga,2,',','.').'</p>
+							<p>Rentang Harga : '.$h->rentang_harga.'</p>
 							Lokasi : <strong>'.$h->lokasi.'</strong><br>Kategori : <strong>'.$h->kategori.'</strong>
 							<p><span class="label label-warning">Jenis : '.$h->kondisi.'</span> <span class="label label-important">'.$h->tipe.'</span></p>
 						</div>

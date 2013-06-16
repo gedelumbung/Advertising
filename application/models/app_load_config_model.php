@@ -19,6 +19,9 @@ class app_load_config_model extends CI_Model {
 			$_SESSION[$d->tipe] = $_SESSION['konfig_app_'.$i];
 			$i++;
 		}
+		
+		$waktu_sekarang = gmdate("Y/m/d",time()-3600*8);
+		$cek = $this->db->query("delete FROM dlmbg_iklan where DATE_FORMAT(FROM_UNIXTIME(tanggal_expired-3600*8), '%Y/%m/%d')<='".$waktu_sekarang."'");
 	}
 }
 

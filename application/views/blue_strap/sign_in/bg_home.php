@@ -31,6 +31,13 @@
 							  </div>
 							  
 							  <div class="control-group">
+								<label class="control-label" for="password">Re-type Password</label>
+								<div class="controls">
+								  <input type="password" id="controls" name="password2" placeholder="Re-Type Password" required>
+								</div>
+							  </div>
+							  
+							  <div class="control-group">
 								<label class="control-label" for="captcha">Captcha</label>
 								<div class="controls">
 								<p><?php echo $captcha; ?></p>
