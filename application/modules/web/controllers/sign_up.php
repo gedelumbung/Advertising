@@ -72,30 +72,42 @@ class sign_up extends CI_Controller {
 			}
 			else
 			{
-				if($_SESSION['site_send_activation']=="yes")
-				{
-					$in['kode_aktivasi'] = md5($in['email'].time());
-					$in['stts'] = 0;
-					$this->db->insert("dlmbg_member",$in);
-					$id = mysql_insert_id();
-					
-					$this->email->from($_SESSION['site_email_server'], $_SESSION['site_title']);
-					$this->email->to($in['email']);
-					$this->email->set_mailtype('html');
-					$this->email->subject('Link Aktivasi - '.$_SESSION['site_title']);
-					$this->email->message(base_url().'sign_up/aktif/'.$id.'/'.$in['kode_aktivasi']);
-					$this->email->send();
+				$pass1 = $this->input->post("password");
+				$pass2 = $this->input->post("password2");
 				
-					$this->session->set_flashdata('result', 'Email verifikasi telah terkirim ke email anda');
-					redirect("web/sign_up");
+				if($pass1==$pass2)
+				{
+					if($_SESSION['site_send_activation']=="yes")
+					{
+						$in['kode_aktivasi'] = md5($in['email'].time());
+						$in['stts'] = 0;
+						$this->db->insert("dlmbg_member",$in);
+						$id = mysql_insert_id();
+						
+						$this->email->from($_SESSION['site_email_server'], $_SESSION['site_title']);
+						$this->email->to($in['email']);
+						$this->email->set_mailtype('html');
+						$this->email->subject('Link Aktivasi - '.$_SESSION['site_title']);
+						$this->email->message(base_url().'sign_up/aktif/'.$id.'/'.$in['kode_aktivasi']);
+						$this->email->send();
+					
+						$this->session->set_flashdata('result', 'Email verifikasi telah terkirim ke email anda');
+						redirect("web/sign_up");
+					}
+					else
+					{
+						$in['stts'] = 1;
+						$this->db->insert("dlmbg_member",$in);
+						$this->session->set_flashdata('result', 'Sign Up sukses, silahkan login dengan akun anda');
+						redirect("web/sign_up");
+					}
 				}
 				else
 				{
-					$in['stts'] = 1;
-					$this->db->insert("dlmbg_member",$in);
-					$this->session->set_flashdata('result', 'Sign Up sukses, silahkan login dengan akun anda');
-					redirect("web/sign_up");
+						$this->session->set_flashdata('result', 'password tidak sama');
+						redirect("web/sign_up");
 				}
+				
 			}
 		}
 	}

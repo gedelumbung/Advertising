@@ -1,4 +1,8 @@
-
+<style>
+.tanggal{
+padding:10px;
+}
+</style>
 	<div class="main-container">
 		<div class="container-fluid">
 			<section>

@@ -501,7 +501,7 @@ class app_global_superadmin_model extends CI_Model {
 							</p>
 							<p>
 							<form method="post" action="'.base_url().'superadmin/iklan/set_expired">
-								<input type="date" placeholder="Set waktu expired" value="'.$waktu_expired.'" name="tanggal_expired">
+								<input type="date" class="tanggal" style="padding:5px; height:40px;" placeholder="Set waktu expired" value="'.$waktu_expired.'" name="tanggal_expired">
 								<input type="hidden" value="'.$h->id_iklan.'" name="id_iklan">
 								<br>
 								<input type="submit" class="btn btn-small" value="Simpan">
